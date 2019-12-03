@@ -18,7 +18,7 @@ const OrderSchema = new Schema({
         type: Number,
         required: true
     },
-    secret: {
+    hashedSecret: {
         type: String,
         required: true
     },
@@ -26,9 +26,17 @@ const OrderSchema = new Schema({
         type: String,
         required: true
     },
+    addressSellerToReceive: {
+        type: String,
+        default: ""
+    },
     publicKey: {
         type: String,
         default: ""
+    },
+    status: {
+        type: String,
+        required: true
     }
         
 })

@@ -21,9 +21,6 @@ class Proxy {
 	}
 
 	activeEndpoints(){
-		app.get('/test', (req, res) => {
-			this.testEndpoint(req, res)
-		});
 		app.post('/create/order', (req,res)=>{
 			this.createOrder(req,res)
 		});
@@ -31,21 +28,19 @@ class Proxy {
 		app.get('/all-orders/:buyTicker', (req,res) => {
 			this.getAllOrdersByTicker(req,res)
 		})
-		app.delete('/delete/:id', (req,res) => {
+		app.get('/order/:hashedSecret', (req,res) => {
+			this.getOrderByHashedSecret(req,res)
+		})
+		app.put('/order/:id/status/:status', (req,res) => {
+			this.changeOrderStatus(req,res);
+		})
+		app.put('/order/:id/addressSellerToReceive/:addressSellerToReceive', (req,res) => {
+			this.addAddressSellerToReceives(req,res);
+		})
+		app.delete('/order/:id', (req,res) => {
 			this.deleteById(req,res)
 		})
-		app.delete('/delete', this.deleteAllOrders)
-	}
-
-	testEndpoint(req, res){
-		try{
-			let data= {
-				test: "test",
-			}
-			res.send(data)
-		}catch(e){
-			console.log(e);
-		}
+		app.delete('/orders', this.deleteAllOrders)
 	}
 
 	async createOrder(req, res){
@@ -80,6 +75,44 @@ class Proxy {
 		.then(orders => {
 			res.send(orders)
 		});
+	}
+
+	getOrderByHashedSecret(req, res){
+		let hashedSecret = req.params.hashedSecret
+		Order
+		.find({hashedSecret: hashedSecret})
+		.then(orders => {
+			console.log("check status in getOrderByHashedSecret")
+			res.send(orders)
+		});
+	}
+
+	changeOrderStatus(req,res){
+		let id = req.params.id;
+		let newStatus = req.params.status;
+		Order
+		.findOneAndUpdate({_id: id}, {status: newStatus})
+		.then(order => {
+			let data = {
+				changedId: order.id,
+				newStatus,
+			}
+			res.send(data)
+		})
+	}
+
+	addAddressSellerToReceives(req,res){
+		let id = req.params.id;
+		let addressSellerToReceive = req.params.addressSellerToReceive;
+		Order
+		.findOneAndUpdate({_id: id}, {addressSellerToReceive: addressSellerToReceive})
+		.then(order => {
+			let data = {
+				changedId: order.id,
+				addressSellerToReceive,
+			}
+			res.send(data)
+		})
 	}
 
 	saveToDB(data){
