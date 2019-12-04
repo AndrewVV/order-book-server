@@ -1,9 +1,9 @@
 {
   "name": "order-book-swaps",
   "version": "1.0.0",
-  "main": "Proxy.js",
+  "main": "OrderProxy.js",
   "scripts": {
-    "start": "nodemon Proxy.js"
+    "start": "nodemon OrderProxy.js"
   },
   "author": "",
   "license": "ISC",

@@ -15,7 +15,7 @@ mongoose.connect('mongodb://localhost/order-book')
 require('./order.model')
 const Order = mongoose.model('orders')
 
-class Proxy {
+class OrderProxy {
 	constructor(){ 
 		this.activeEndpoints()
 	}
@@ -148,4 +148,4 @@ class Proxy {
 	
 }
 
-let proxy = new Proxy();
+let orderProxy = new OrderProxy();
