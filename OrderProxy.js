@@ -31,11 +31,17 @@ class OrderProxy {
 		app.get('/order/:hashedSecret', (req,res) => {
 			this.getOrderByHashedSecret(req,res)
 		})
+		app.get('/order/id/:id', (req,res) => {
+			this.getOrderById(req,res)
+		})
 		app.put('/order/:id/status/:status', (req,res) => {
 			this.changeOrderStatus(req,res);
 		})
 		app.put('/order/:id/addressSellerToReceive/:addressSellerToReceive', (req,res) => {
 			this.addAddressSellerToReceives(req,res);
+		})
+		app.put('/order/:id/tx-hash-eth/:txHash', (req,res) => {
+			this.addTxHashEth(req,res);
 		})
 		app.delete('/order/:id', (req,res) => {
 			this.deleteById(req,res)
@@ -87,6 +93,15 @@ class OrderProxy {
 		});
 	}
 
+	getOrderById(req, res){
+		let id = req.params.id
+		Order
+		.find({_id: id})
+		.then(orders => {
+			res.send(orders)
+		});
+	}
+
 	changeOrderStatus(req,res){
 		let id = req.params.id;
 		let newStatus = req.params.status;
@@ -110,6 +125,20 @@ class OrderProxy {
 			let data = {
 				changedId: order.id,
 				addressSellerToReceive,
+			}
+			res.send(data)
+		})
+	}
+
+	addTxHashEth(req,res){
+		let id = req.params.id;
+		let txHash = req.params.txHash;
+		Order
+		.findOneAndUpdate({_id: id}, {txHashEth: txHash})
+		.then(order => {
+			let data = {
+				changedId: order.id,
+				txHashEth: txHash,
 			}
 			res.send(data)
 		})

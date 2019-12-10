@@ -37,6 +37,10 @@ const OrderSchema = new Schema({
     status: {
         type: String,
         required: true
+    },
+    txHashEth: {
+        type: String,
+        default: ""
     }
         
 })
