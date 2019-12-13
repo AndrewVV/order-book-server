@@ -40,8 +40,23 @@ class OrderProxy {
 		app.put('/order/:id/addressSellerToReceive/:addressSellerToReceive', (req,res) => {
 			this.addAddressSellerToReceives(req,res);
 		})
-		app.put('/order/:id/tx-hash-eth/:txHash', (req,res) => {
+		app.put('/order/:id/txHashBtc/:txHash', (req,res) => {
+			this.addTxHashBtc(req,res);
+		})
+		app.put('/order/:id/txHashEth/:txHash', (req,res) => {
 			this.addTxHashEth(req,res);
+		})
+		app.put('/order/:id/hashedSecret/:hashedSecret', (req,res) => {
+			this.addHashedSecret(req,res);
+		})
+		app.put('/order/:id/scriptAddress/:scriptAddress', (req,res) => {
+			this.addScriptAddress(req,res);
+		})
+		app.put('/order/:id/refundTime/:refundTime', (req,res) => {
+			this.addRefundTime(req,res);
+		})
+		app.put('/order/:id/publicKeySeller/:publicKeySeller', (req,res) => {
+			this.addPublicKeySeller(req,res);
 		})
 		app.delete('/order/:id', (req,res) => {
 			this.deleteById(req,res)
@@ -57,7 +72,8 @@ class OrderProxy {
 			let data;
 			if(result){
 				data = {
-					result: `Order ${result._id} saved`,
+					result: `Order saved`,
+					id: result._id,
 				}
 			}
 			res.send(data)
@@ -130,6 +146,20 @@ class OrderProxy {
 		})
 	}
 
+	addTxHashBtc(req,res){
+		let id = req.params.id;
+		let txHash = req.params.txHash;
+		Order
+		.findOneAndUpdate({_id: id}, {txHashBtc: txHash})
+		.then(order => {
+			let data = {
+				changedId: order.id,
+				txHashBtc: txHash,
+			}
+			res.send(data)
+		})
+	}
+
 	addTxHashEth(req,res){
 		let id = req.params.id;
 		let txHash = req.params.txHash;
@@ -139,6 +169,62 @@ class OrderProxy {
 			let data = {
 				changedId: order.id,
 				txHashEth: txHash,
+			}
+			res.send(data)
+		})
+	}
+	
+	addHashedSecret(req,res){
+		let id = req.params.id;
+		let hashedSecret = req.params.hashedSecret;
+		Order
+		.findOneAndUpdate({_id: id}, {hashedSecret})
+		.then(order => {
+			let data = {
+				changedId: order.id,
+				hashedSecret: hashedSecret,
+			}
+			res.send(data)
+		})
+	}
+
+	addScriptAddress(req,res){
+		let id = req.params.id;
+		let scriptAddress = req.params.scriptAddress;
+		Order
+		.findOneAndUpdate({_id: id}, {scriptAddress})
+		.then(order => {
+			let data = {
+				changedId: order.id,
+				scriptAddress: scriptAddress,
+			}
+			res.send(data)
+		})
+	}
+
+	addRefundTime(req,res){
+		let id = req.params.id;
+		let refundTime = req.params.refundTime;
+		Order
+		.findOneAndUpdate({_id: id}, {refundTime})
+		.then(order => {
+			let data = {
+				changedId: order.id,
+				refundTime,
+			}
+			res.send(data)
+		})
+	}
+
+	addPublicKeySeller(req,res){
+		let id = req.params.id;
+		let publicKeySeller = req.params.publicKeySeller;
+		Order
+		.findOneAndUpdate({_id: id}, {publicKeySeller})
+		.then(order => {
+			let data = {
+				changedId: order.id,
+				publicKeySeller,
 			}
 			res.send(data)
 		})

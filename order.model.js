@@ -20,7 +20,11 @@ const OrderSchema = new Schema({
     },
     hashedSecret: {
         type: String,
-        required: true
+        default: ""
+    },
+    scriptAddress: {
+        type: String,
+        default: ""
     },
     addressToReceive: {
         type: String,
@@ -30,7 +34,11 @@ const OrderSchema = new Schema({
         type: String,
         default: ""
     },
-    publicKey: {
+    publicKeyBuyer: {
+        type: String,
+        default: ""
+    },
+    publicKeySeller: {
         type: String,
         default: ""
     },
@@ -41,8 +49,15 @@ const OrderSchema = new Schema({
     txHashEth: {
         type: String,
         default: ""
-    }
-        
+    },
+    txHashBtc: {
+        type: String,
+        default: ""
+    },
+    refundTime: {
+        type: Number,
+        default: 0
+    },
 })
 
 mongoose.model("orders", OrderSchema)
