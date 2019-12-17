@@ -55,8 +55,14 @@ class OrderProxy {
 		app.put('/order/:id/refundTime/:refundTime', (req,res) => {
 			this.addRefundTime(req,res);
 		})
+		app.put('/order/:id/publicKeyBuyer/:publicKeyBuyer', (req,res) => {
+			this.addPublicKeyBuyer(req,res);
+		})
 		app.put('/order/:id/publicKeySeller/:publicKeySeller', (req,res) => {
 			this.addPublicKeySeller(req,res);
+		})
+		app.put('/order/:id/secret/:secret', (req,res) => {
+			this.addInternalSecret(req,res);
 		})
 		app.delete('/order/:id', (req,res) => {
 			this.deleteById(req,res)
@@ -67,7 +73,6 @@ class OrderProxy {
 	async createOrder(req, res){
 		try{
 			let order = req.body;
-			console.log("createOrder in Proxy", order)
 			let result = await this.saveToDB(order)
 			let data;
 			if(result){
@@ -104,7 +109,6 @@ class OrderProxy {
 		Order
 		.find({hashedSecret: hashedSecret})
 		.then(orders => {
-			console.log("check status in getOrderByHashedSecret")
 			res.send(orders)
 		});
 	}
@@ -113,8 +117,8 @@ class OrderProxy {
 		let id = req.params.id
 		Order
 		.find({_id: id})
-		.then(orders => {
-			res.send(orders)
+		.then(order => {
+			res.send(order[0])
 		});
 	}
 
@@ -215,6 +219,19 @@ class OrderProxy {
 			res.send(data)
 		})
 	}
+	addPublicKeyBuyer(req,res){
+		let id = req.params.id;
+		let publicKeyBuyer = req.params.publicKeyBuyer;
+		Order
+		.findOneAndUpdate({_id: id}, {publicKeyBuyer})
+		.then(order => {
+			let data = {
+				changedId: order.id,
+				publicKeyBuyer,
+			}
+			res.send(data)
+		})
+	}
 
 	addPublicKeySeller(req,res){
 		let id = req.params.id;
@@ -225,6 +242,20 @@ class OrderProxy {
 			let data = {
 				changedId: order.id,
 				publicKeySeller,
+			}
+			res.send(data)
+		})
+	}
+
+	addInternalSecret(req,res){
+		let id = req.params.id;
+		let internalSecret = req.params.secret;
+		Order
+		.findOneAndUpdate({_id: id}, {internalSecret})
+		.then(order => {
+			let data = {
+				changedId: order.id,
+				internalSecret,
 			}
 			res.send(data)
 		})

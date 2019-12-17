@@ -26,7 +26,7 @@ const OrderSchema = new Schema({
         type: String,
         default: ""
     },
-    addressToReceive: {
+    addressBuyerToReceive: {
         type: String,
         required: true
     },
@@ -58,6 +58,10 @@ const OrderSchema = new Schema({
         type: Number,
         default: 0
     },
+    internalSecret: {
+        type: String,
+        default: ""
+    }
 })
 
 mongoose.model("orders", OrderSchema)
