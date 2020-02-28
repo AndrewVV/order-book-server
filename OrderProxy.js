@@ -14,8 +14,11 @@ mongoose.connect('mongodb://localhost/order-book')
 
 require('./order.model')
 require('./confirm.model')
+require('./refund.model')
 const Order = mongoose.model('orders');
 const Confirm = mongoose.model('confirmations');
+const RefundTime = require('./Refund')
+let refundTime = new RefundTime(app, mongoose)
 
 class OrderProxy {
 	constructor(){ 
