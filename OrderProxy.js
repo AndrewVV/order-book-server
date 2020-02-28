@@ -13,7 +13,9 @@ mongoose.connect('mongodb://localhost/order-book')
 	.catch(e => console.log(e))
 
 require('./order.model')
-const Order = mongoose.model('orders')
+require('./confirm.model')
+const Order = mongoose.model('orders');
+const Confirm = mongoose.model('confirmations');
 
 class OrderProxy {
 	constructor(){ 
@@ -295,3 +297,87 @@ class OrderProxy {
 }
 
 let orderProxy = new OrderProxy();
+
+class Confirmations {
+	constructor(){ 
+		this.activeEndpoints()
+	}
+
+	activeEndpoints(){
+		app.post('/add-confirmations', (req,res)=>{
+			this.createConfirm(req,res)
+		});
+		app.get('/all-confirmations', this.getConfirmations)
+		app.put('/confirm/:ticker/:value', (req,res) => {
+			this.changeConfirmValue(req,res);
+		})
+		app.delete('/confirmations', this.deleteConfirmations)
+	}
+
+	async createConfirm(req, res){
+		try{
+			let result = await this.saveToDB()
+			let data;
+			if(result){
+				data = {
+					status: `Confirmations saved`,
+					result
+				}
+			}
+			res.send(data)
+		}catch(e){
+			console.log(e);
+		}
+	}
+
+	saveToDB(){
+		return new Promise(async(resolve, reject)=>{
+			let confirm = new Confirm();
+			confirm
+			.save()
+			.then(result =>{
+				return resolve(result);
+			}).
+			catch(e => reject(e))
+		});
+	}
+
+	getConfirmations(req, res){
+		Confirm
+		.find()
+		.then(confirmations => {
+			let data = {
+				"BTC": confirmations[0].BTC,
+				"ETH": confirmations[0].ETH
+			}
+			res.send(data)
+		});
+	}
+
+	changeConfirmValue(req,res){
+		let ticker = req.params.ticker.toUpperCase();
+		let newValue = req.params.value;
+		Confirm
+		.findOneAndUpdate({__v: 0}, {[ticker]: newValue})
+		.then(order => {
+			let data = {
+				changedTicker: ticker,
+				newValue
+			}
+			res.send(data)
+		})
+	}
+
+	deleteConfirmations(req, res){
+		Confirm
+		.find()
+		.remove()
+		.then(confirmations => {
+			res.send(`Removed all confirmations, status: ${JSON.stringify(confirmations)}`)
+		});
+	}
+	
+
+}
+
+let confirmations = new Confirmations()
