@@ -18,6 +18,10 @@ const OrderSchema = new Schema({
         type: Number,
         required: true
     },
+    priceForOne: {
+        type: Number,
+        required: true
+    },
     hashedSecret: {
         type: String,
         default: ""
