@@ -50,6 +50,10 @@ const OrderSchema = new Schema({
         type: String,
         required: true
     },
+    statusInternal: {
+        type: String,
+        default: ""
+    },
     txHashEth: {
         type: String,
         default: ""

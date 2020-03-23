@@ -42,6 +42,9 @@ class OrderProxy {
 		app.put('/order/:id/status/:status', (req,res) => {
 			this.changeOrderStatus(req,res);
 		})
+		app.put('/order/:id/status-internal/:status', (req,res) => {
+			this.changeOrderStatusInternal(req,res);
+		})
 		app.put('/order/:id/addressSellerToReceive/:addressSellerToReceive', (req,res) => {
 			this.addAddressSellerToReceives(req,res);
 		})
@@ -132,6 +135,20 @@ class OrderProxy {
 		let newStatus = req.params.status;
 		Order
 		.findOneAndUpdate({_id: id}, {status: newStatus})
+		.then(order => {
+			let data = {
+				changedId: order.id,
+				newStatus,
+			}
+			res.send(data)
+		})
+	}
+
+	changeOrderStatusInternal(req,res){
+		let id = req.params.id;
+		let newStatus = req.params.status;
+		Order
+		.findOneAndUpdate({_id: id}, {statusInternal: newStatus})
 		.then(order => {
 			let data = {
 				changedId: order.id,
