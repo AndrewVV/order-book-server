@@ -85,8 +85,9 @@ class OrderProxy {
 			let data;
 			if(result){
 				data = {
+					status: result.statusInternal,
 					result: `Order saved`,
-					id: result._id,
+					_id: result._id,
 				}
 			}
 			res.send(data)
