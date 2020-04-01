@@ -29,7 +29,8 @@ class OrderProxy {
 		app.post('/create/order', (req,res)=>{
 			this.createOrder(req,res)
 		});
-		app.get('/all-orders', this.getAllOrders)
+		app.get('/all-orders', this.getAllOrders);
+		app.get('/all-canceled-orders', this.getAllCanceledOrders);
 		app.get('/all-orders/:buyTicker', (req,res) => {
 			this.getAllOrdersByTicker(req,res)
 		})
@@ -98,7 +99,15 @@ class OrderProxy {
 
 	getAllOrders(req, res){
 		Order
-		.find()
+		.find({statusInternal: ["OPEN", "IN_PROGRESS" , "COMPLETED"] })
+		.then(orders => {
+			res.send(orders)
+		});
+	}
+
+	getAllCanceledOrders(req, res){
+		Order
+		.find({statusInternal: "CANCEL"})
 		.then(orders => {
 			res.send(orders)
 		});
