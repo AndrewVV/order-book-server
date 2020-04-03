@@ -30,9 +30,17 @@ const OrderSchema = new Schema({
         type: String,
         default: ""
     },
+    buyersAddressForSending: {
+        type: String,
+        required: true
+    },
     addressBuyerToReceive: {
         type: String,
         required: true
+    },
+    sellersAddressForSending: {
+        type: String,
+        default: ""
     },
     addressSellerToReceive: {
         type: String,

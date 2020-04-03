@@ -1,7 +1,9 @@
+require('../models/refund.model')
+
 class RefundTime {
 	constructor(app, mongoose){ 
         this.app = app;
-        this.refund = mongoose.model('refundTime')
+		this.refund = mongoose.model('refundTime')
 		this.activeEndpoints()
 	}
 
