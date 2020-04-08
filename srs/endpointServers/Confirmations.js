@@ -1,3 +1,5 @@
+require('../models/confirm.model')
+
 class Confirmations {
 	constructor(app, mongoose){
         this.app = app;

@@ -10,11 +10,7 @@ app.listen(process.env.ORDER_PROXY_PORT, () => console.log("Server is up on port
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/order-book', { useNewUrlParser: true, useUnifiedTopology: true })
 	.then(()=> console.log("Connected successfully to MongoDB"))
-	.catch(e => console.log(e))
-
-// require('../models/order.model')
-require('../models/confirm.model')
-// require('../models/refund.model')
+	.catch(e => console.error(e))
 
 const Order = require('../endpointServers/Order')
 const Confirmation = require('../endpointServers/Confirmations')

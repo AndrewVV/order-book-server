@@ -14,6 +14,9 @@ class Order {
 		this.app.get('/all-orders', (req, res) => {
 			this.getAllOrders(req, res)
 		})
+		this.app.get('/all-active-orders', (req, res) => {
+			this.getAllActiveOrders(req, res)
+		})
 		this.app.get('/all-opened-orders', (req, res) => {
 			this.getAllOpenedOrders(req, res)
 		});
@@ -93,7 +96,15 @@ class Order {
 
 	getAllOrders(req, res){
 		this.order
-		.find({statusInternal: ["OPEN", "IN_PROGRESS" , "COMPLETED"] })
+		.find()
+		.then(orders => {
+			res.send(orders)
+		});
+	}
+
+	getAllActiveOrders(req, res){
+		this.order
+		.find({statusInternal: ["OPEN", "IN_PROGRESS"] })
 		.then(orders => {
 			res.send(orders)
 		});
